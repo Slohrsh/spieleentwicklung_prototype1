@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,9 +8,11 @@ public class PlayerController : MonoBehaviour {
     public float speed;
     public GameManager gameManager;
     public GameObject projectilePrefab;
+    public List<GameObject> portals;
  
 
     public int jumpPower;
+    public int JetpackPower;
 
     private Rigidbody playerRigidbody;
     private bool isJumping = false;
@@ -27,10 +30,17 @@ public class PlayerController : MonoBehaviour {
 
     void FixedUpdate()
     {
+        handleInputs();
+        checkFallOutOfMap();
+        handleTimer();
+    }
+
+    private void handleInputs()
+    {
         float moveVertical = Input.GetAxis("Vertical");
         float moveHorizontal = Input.GetAxis("Horizontal");
 
-        Vector3 lookhere = new Vector3(0, moveHorizontal, 0);
+        Vector3 lookhere = new Vector3(0, moveHorizontal*5, 0);
         transform.Rotate(lookhere);
 
         currentSpeed = speed;
@@ -39,38 +49,43 @@ public class PlayerController : MonoBehaviour {
             currentSpeed = speed * 1.5f;
         }
 
-        playerRigidbody.AddForce(transform.forward * moveVertical* currentSpeed);
+        playerRigidbody.AddForce(transform.forward * moveVertical * currentSpeed);
 
         if (Input.GetKey(KeyCode.Mouse0))
         {
             shoot();
         }
 
-        if (Input.GetKey(KeyCode.Space) && (!isJumping || isJetpack))
+        if (Input.GetKey(KeyCode.Space))
         {
-            playerRigidbody.AddForce(Vector3.up * jumpPower);
-            isJumping = true;
+            if (isJetpack)
+            {
+                playerRigidbody.AddForce(Vector3.up * JetpackPower);
+            }else if(!isJumping)
+            {
+                playerRigidbody.AddForce(Vector3.up * jumpPower);
+                isJumping = true;
+            }
         }
-        checkFallOutOfMap();
-        givePowerupEffects();
     }
 
-    void givePowerupEffects()
+    void handleTimer()
+    {
+        handleJetPackTimer();
+    }
+
+    private void handleJetPackTimer()
     {
         float timerMax;
 
         if (isJetpack == true)
         {
             timerMax = 5;
-
             powerupTimer += Time.deltaTime;
-
             if (powerupTimer >= timerMax)
             {
-                Debug.Log("timerMax reached !");
                 isJetpack = false;
             }
-
         }
     }
 
@@ -93,6 +108,18 @@ public class PlayerController : MonoBehaviour {
             isJetpack = true;
             other.gameObject.SetActive(false);
         }
+
+        if (other.gameObject.CompareTag("Portal"))
+        {
+            foreach (GameObject portal in portals)
+            {
+                if (!GameObject.ReferenceEquals(other.gameObject, portal))
+                {
+                    transform.position = portal.transform.position;
+                }
+            }
+        }
+
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -100,14 +127,16 @@ public class PlayerController : MonoBehaviour {
         if(collision.gameObject.CompareTag("Floor"))
         {
             isJumping = false;
-            
         }
 
         if (collision.gameObject.CompareTag("Goal"))
         {
+            isJumping = false;
             Debug.Log("Goal");
-            playerRigidbody.AddForce(Vector3.up * 500);
+            gameManager.gameWon();
         }
+
+
     }
 
     private void shoot()

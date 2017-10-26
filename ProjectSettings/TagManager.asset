@@ -9,6 +9,7 @@ TagManager:
   - Goal
   - JetPack
   - Portal
+  - projectile
   layers:
   - Default
   - TransparentFX

@@ -6,16 +6,37 @@ public class EnemyController : MonoBehaviour {
 
     public Transform Player;
     public int speed;
+    public int life;
+    public int MinDist;
+
+    private Rigidbody enemyRigidbody;
 
     void Start()
     {
-
+        enemyRigidbody = GetComponent<Rigidbody>();
     }
 
     void Update()
     {
         transform.LookAt(Player);
 
-        transform.position += transform.forward * speed * Time.deltaTime;
+        if (Vector3.Distance(transform.position, Player.position) >= MinDist)
+        {
+
+            transform.position += transform.forward * speed * Time.deltaTime;
+        }
+        if(life <= 0)
+        {
+            enemyRigidbody.gameObject.SetActive(false);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("projectile"))
+        {
+            Debug.Log(life);
+            life -= 1;
+        }
     }
 }

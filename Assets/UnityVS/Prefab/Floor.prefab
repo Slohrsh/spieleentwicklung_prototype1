@@ -56,7 +56,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 27f0dbd6343c6a3488d2fcd562e5efc7, type: 2}
+  - {fileID: 2100000, guid: 401ad4983cc206c4f923a26dd2542db1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -107,5 +107,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   min: 2
   max: 3
-  isMovable: 0
-  player: {fileID: 1349762121524596, guid: 5189a4b184f3f5e488fb97e3e9d12c79, type: 2}
+  isMovingLeftAndRigth: 0
+  isMovingUpAndDown: 0
