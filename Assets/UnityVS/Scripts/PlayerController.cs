@@ -22,10 +22,13 @@ public class PlayerController : MonoBehaviour {
 
     private float powerupTimer;
 
+    private Animator animator;
+
 
     void Start()
     {
         playerRigidbody = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
     }
 
     void FixedUpdate()
@@ -39,6 +42,10 @@ public class PlayerController : MonoBehaviour {
     {
         float moveVertical = Input.GetAxis("Vertical");
         float moveHorizontal = Input.GetAxis("Horizontal");
+        bool fire = Input.GetButtonDown("Fire1");
+
+        animator.SetFloat("Forward", moveVertical);
+        
 
         Vector3 lookhere = new Vector3(0, moveHorizontal*5, 0);
         transform.Rotate(lookhere);
@@ -51,8 +58,9 @@ public class PlayerController : MonoBehaviour {
 
         playerRigidbody.AddForce(transform.forward * moveVertical * currentSpeed);
 
-        if (Input.GetKey(KeyCode.Mouse0))
+        if (fire)
         {
+            animator.SetTrigger("Fire");
             shoot();
         }
 
