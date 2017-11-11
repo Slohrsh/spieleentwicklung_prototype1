@@ -8,6 +8,7 @@ public class EnemyController : MonoBehaviour {
     public int speed;
     public int life;
     public int MinDist;
+    public float bounceBackForce;
 
     private Rigidbody enemyRigidbody;
 
