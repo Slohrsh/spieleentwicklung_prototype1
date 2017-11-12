@@ -38,6 +38,7 @@ public class EnemyController : MonoBehaviour {
         {
             Debug.Log(life);
             life -= 1;
+            other.gameObject.SetActive(false);
         }
     }
 }
