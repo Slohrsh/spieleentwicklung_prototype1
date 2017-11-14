@@ -22,8 +22,7 @@ public class EnemyController : MonoBehaviour {
         transform.LookAt(Player);
 
         if (Vector3.Distance(transform.position, Player.position) >= MinDist)
-        {
-
+        { 
             transform.position += transform.forward * speed * Time.deltaTime;
         }
         if(life <= 0)
